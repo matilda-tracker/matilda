@@ -18,8 +18,6 @@
     </nav>
     <!-- breadcrumb end -->
 
-    <info-bar></info-bar>
-
     <div class="flex flex-wrap -mx-3">
       <div class="w-full px-3">
         <p class="text-xl font-semibold mb-4">Non-fungible tokens</p>

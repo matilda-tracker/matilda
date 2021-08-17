@@ -18,8 +18,6 @@
     </nav>
     <!-- breadcrumb end -->
 
-    <info-bar></info-bar>
-
   </div>
 </template>
 
