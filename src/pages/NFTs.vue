@@ -36,7 +36,7 @@
               </div>
               <div class="my-auto w-11/12 pl-8">
                 <p class="font-semibold text-xl">
-                  Piggybankone Lottery Ticket
+                  Unknown NFT
                 </p>
               </div>
             </div>
@@ -51,9 +51,11 @@
                   {{ token.meta.name ? token.meta.name : token.tokenAddress }}
                 </p>
                 <p>
-                  <router-link :to="{ name: 'search', params: { address: token.tokenAddress } }">
-                    Click for metadata
-                  </router-link>
+                  <span :key="`meta-${key}`" v-for="(value, key) in token.meta">
+                     <span v-if="Array.isArray(value) === false && key !== 'image'">
+                       {{ key }}: {{ value }} <br>
+                     </span>
+                  </span>
                 </p>
               </div>
             </div>
