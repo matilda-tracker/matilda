@@ -49,7 +49,6 @@
 </template>
 
 <script>
-import InfoBar from '../components/InfoBar'
 import {mapGetters} from 'vuex'
 
 export default {
@@ -73,9 +72,6 @@ export default {
       }
       return x1 + x2;
     }
-  },
-  components: {
-    InfoBar
   },
   computed: {
     ...mapGetters([

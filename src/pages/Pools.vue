@@ -22,7 +22,6 @@
 </template>
 
 <script>
-import InfoBar from '../components/InfoBar'
 
 export default {
   name: 'Pools',
@@ -39,8 +38,5 @@ export default {
       return x1 + x2;
     }
   },
-  components: {
-    InfoBar
-  }
 }
 </script>
