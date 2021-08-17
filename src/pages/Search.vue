@@ -19,7 +19,7 @@
     <!-- breadcrumb end -->
 
     <div class="lg:flex justify-between items-center mb-6">
-      <p class="text-2xl font-semibold mb-2 lg:mb-0">{{ contractAddress | compressAddress }}</p>
+      <p class="text-2xl font-semibold mb-2 lg:mb-0">{{ contractInfo.name }}</p>
     </div>
 
     <div class="mb-6 break-all">
@@ -125,6 +125,11 @@
 import axios from 'axios'
 import {ethers} from 'ethers'
 
+import {Harmony} from '@harmony-js/core'
+import {ChainID, ChainType} from '@harmony-js/utils'
+
+import artifact from '../plugins/abi/HRC20.json'
+
 export default {
   name: 'Search',
   filters: {
@@ -162,6 +167,14 @@ export default {
       axios.get(`https://explorer-v2-api.hmny.io/v0/shard/0/address/${this.contractAddress}/contract`),
       axios.get(`https://explorer-v2-api.hmny.io/v0/erc20/token/${this.contractAddress}/holders`)
     ])
+
+    const hmy = new Harmony('https://api.s0.t.hmny.io', {
+      chainType: ChainType.Harmony,
+      chainId: ChainID.HmyMainnet,
+    })
+
+    const contract = hmy.contracts.createContract(artifact.abi, this.contractAddress);
+    contractInfo.data.name = await contract.methods.name().call()
 
     this.contractInfo = contractInfo.data
 

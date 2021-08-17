@@ -3,6 +3,11 @@ import Vuex from 'vuex'
 import axios from 'axios'
 import {ethers} from 'ethers'
 
+import {Harmony} from '@harmony-js/core'
+import {ChainID, ChainType} from '@harmony-js/utils'
+
+import artifact from '../plugins/abi/HRC20.json'
+
 Vue.use(Vuex)
 
 export default new Vuex.Store({
@@ -104,6 +109,7 @@ export default new Vuex.Store({
         }
     },
     actions: {
+
         async getTokens(context) {
             const [erc1155, erc721, erc20] = await Promise.all([
                 axios.get(`https://explorer-v2-api.hmny.io/v0/erc1155/address/${context.state.walletAddress}/balances`),
@@ -113,8 +119,17 @@ export default new Vuex.Store({
 
             context.dispatch('setTokens', {erc1155, erc721, erc20})
         },
-        setTokens(context, {erc1155, erc721, erc20}) {
-            erc20.data.map((token) => {
+        async setTokens(context, {erc1155, erc721, erc20}) {
+            await erc20.data.map(async (token) => {
+
+                const hmy = new Harmony('https://api.s0.t.hmny.io', {
+                    chainType: ChainType.Harmony,
+                    chainId: ChainID.HmyMainnet,
+                })
+
+                const contract = hmy.contracts.createContract(artifact.abi, token.tokenAddress);
+                token.name = await contract.methods.name().call()
+
                 token.balance = parseFloat(ethers.utils.formatEther(token.balance)).toFixed(4)
             })
 

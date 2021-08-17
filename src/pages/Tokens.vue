@@ -29,7 +29,7 @@
             <div>
               <router-link :to="{ name: 'search', params: { address: token.tokenAddress } }">
                 <p class="font-semibold text-xl">
-                  {{ token.tokenAddress | compressAddress }}
+                  {{ token.name }}
                 </p>
                 <p>
                   Click for holders list
