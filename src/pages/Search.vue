@@ -19,10 +19,10 @@
     <!-- breadcrumb end -->
 
     <div class="lg:flex justify-between items-center mb-6">
-      <p class="text-2xl font-semibold mb-2 lg:mb-0">{{ contractAddress }}</p>
+      <p class="text-2xl font-semibold mb-2 lg:mb-0">{{ contractAddress | compressAddress }}</p>
     </div>
 
-    <div class="mb-6">
+    <div class="mb-6 break-all">
       <p>
         <strong>
           Contract creator:
@@ -107,7 +107,7 @@
               class="w-full bg-gray-100 border rounded-lg flex justify-between items-center px-4 py-2 mb-4">
             <div>
               <p class="font-semibold">
-                {{ holder.ownerAddress }}
+                {{ holder.ownerAddress | compressAddress }}
               </p>
             </div>
             <span class="text-green-500 font-semibold">
@@ -128,6 +128,13 @@ import {ethers} from 'ethers'
 export default {
   name: 'Search',
   filters: {
+    compressAddress(address) {
+      return (
+          address.substr(0, 10) +
+          "..." +
+          address.substr(address.length - 5, address.length)
+      );
+    },
     formatNumber(nStr) {
       nStr += '';
       let x = nStr.split('.');

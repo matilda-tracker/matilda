@@ -31,7 +31,7 @@
             <div>
               <router-link :to="{ name: 'search', params: { address: token.tokenAddress } }">
                 <p class="font-semibold text-xl">
-                  {{ token.tokenAddress }}
+                  {{ token.tokenAddress | compressAddress }}
                 </p>
                 <p>
                   Click for holders list
@@ -57,6 +57,13 @@ import {mapGetters} from 'vuex'
 export default {
   name: 'Tokens',
   filters: {
+    compressAddress(address) {
+      return (
+          address.substr(0, 10) +
+          "..." +
+          address.substr(address.length - 5, address.length)
+      );
+    },
     formatNumber(nStr) {
       nStr += '';
       let x = nStr.split('.');

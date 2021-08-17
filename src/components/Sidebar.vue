@@ -15,6 +15,7 @@
     <div class="mb-4 px-4">
       <p class="pl-4 text-sm font-semibold mb-1">MAIN</p>
       <div
+          @click="toggleSidebar()"
           class="w-full items-center text-blue-400 py-2 pl-4 hover:bg-gray-200 rounded-lg cursor-pointer">
         <router-link :to="{name: 'home'}">
           <div class="w-full">
@@ -26,6 +27,7 @@
         </router-link>
       </div>
       <div
+          @click="toggleSidebar()"
           class="w-full items-center text-blue-400 py-2 pl-4 hover:bg-gray-200 rounded-lg cursor-pointer">
         <router-link :to="{name: 'tokens'}">
           <div class="w-full">
@@ -37,6 +39,7 @@
         </router-link>
       </div>
       <div
+          @click="toggleSidebar()"
           class="w-full items-center text-blue-400 py-2 pl-4 hover:bg-gray-200 rounded-lg cursor-pointer">
         <router-link :to="{name: 'nfts'}">
           <div class="w-full">
@@ -48,6 +51,7 @@
         </router-link>
       </div>
       <div
+          @click="toggleSidebar()"
           class="w-full items-center text-blue-400 py-2 pl-4 hover:bg-gray-200 rounded-lg cursor-pointer">
         <router-link :to="{name: 'pools'}">
           <div class="w-full">
@@ -63,12 +67,15 @@
 </template>
 
 <script>
-import {mapState} from 'vuex'
+import {mapState, mapActions} from 'vuex'
 
 export default {
   name: 'Sidebar',
   computed: {
     ...mapState(['sideBarOpen'])
+  },
+  methods: {
+    ...mapActions(['toggleSidebar'])
   }
 }
 </script>

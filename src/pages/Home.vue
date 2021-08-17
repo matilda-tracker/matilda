@@ -12,11 +12,11 @@
     <!-- breadcrumb end -->
 
     <div class="lg:flex justify-between items-center mb-6">
-      <p class="text-2xl font-semibold mb-2 lg:mb-0">Good afternoon, 0x!</p>
-      <button
-          class="bg-blue-500 hover:bg-blue-600 focus:outline-none rounded-lg px-6 py-2 text-white font-semibold shadow">
-        View Logs
-      </button>
+      <p class="text-2xl font-semibold mb-2 lg:mb-0">Welcome, {{ walletAddress | compressAddress }}</p>
+<!--      <button-->
+<!--          class="bg-blue-500 hover:bg-blue-600 focus:outline-none rounded-lg px-6 py-2 text-white font-semibold shadow">-->
+<!--        View Logs-->
+<!--      </button>-->
     </div>
 
     <info-bar></info-bar>
@@ -40,10 +40,21 @@
 
 <script>
 import InfoBar from '../components/InfoBar'
+import {mapGetters} from 'vuex'
 
 export default {
   name: 'Home',
+  computed: {
+    ...mapGetters(['walletAddress'])
+  },
   filters: {
+    compressAddress(address) {
+      return (
+          address.substr(0, 10) +
+          "..." +
+          address.substr(address.length - 5, address.length)
+      );
+    },
     formatNumber(nStr) {
       nStr += '';
       let x = nStr.split('.');
