@@ -111,7 +111,7 @@
               </p>
             </div>
             <span class="text-green-500 font-semibold">
-               {{ holder.balance }}
+               {{ holder.balance | formatNumber }}
             </span>
           </div>
         </div>
