@@ -1,0 +1,13 @@
+@tailwind base;
+
+@tailwind components;
+
+@import "fonts/brands";
+@import "fonts/fontawesome";
+@import "fonts/regular";
+@import "fonts/solid";
+@import "fonts/v4-shims";
+
+@import "style";
+
+@tailwind utilities;
