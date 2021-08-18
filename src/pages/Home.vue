@@ -24,15 +24,15 @@
     <div class="flex flex-wrap -mx-3">
       <div class="w-full px-3">
         <p class="text-xl font-semibold mb-4">Recent HRC20 Transactions</p>
-        <div class="w-full bg-white dark:bg-gray-700 border border-white dark:border-gray-700 rounded-lg p-4">
+        <div class="w-full bg-white dark:bg-gray-700 border border-white dark:border-gray-700 rounded-lg px-4 py-2">
           <div v-if="loading"
-               class="w-full bg-gray-100 dark:bg-gray-900 border border-white dark:border-gray-900 rounded-lg flex justify-between items-center px-4 py-2 my-1">
+               class="w-full bg-gray-100 dark:bg-gray-900 border border-white dark:border-gray-900 rounded-lg flex justify-between items-center px-4 py-2 my-3">
             <div class="w-full text-center">
               <p class="font-semibold text-xl">Loading transactions...</p>
             </div>
           </div>
           <div v-else :key="`${tx.to}-${index}`" v-for="(tx, index) in allDecodedHRC20Transactions"
-               class="w-full bg-gray-100 dark:bg-gray-900 border border-white dark:border-gray-900 rounded-lg flex justify-between items-center px-4 py-2 my-1">
+               class="w-full bg-gray-100 dark:bg-gray-900 border border-white dark:border-gray-900 rounded-lg flex justify-between items-center px-4 py-2 my-3">
             <div>
               <p class="font-semibold text-xl">To: {{ tx.to | compressAddress }}</p>
               <p>{{ tx.symbol }}</p>
