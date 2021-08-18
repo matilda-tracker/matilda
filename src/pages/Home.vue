@@ -34,10 +34,13 @@
           <div v-else :key="`${tx.to}-${index}`" v-for="(tx, index) in allDecodedHRC20Transactions"
                class="w-full bg-gray-100 dark:bg-gray-900 border border-white dark:border-gray-900 rounded-lg flex justify-between items-center px-4 py-2 my-1">
             <div>
-              <p class="font-semibold text-xl">{{ tx.to | compressAddress }}</p>
+              <p class="font-semibold text-xl">To: {{ tx.to | compressAddress }}</p>
               <p>{{ tx.symbol }}</p>
+              <span class="md:hidden text-xs md:text-lg text-green-500 font-semibold">
+                   {{ tx.amount | formatNumber }}
+                </span>
             </div>
-            <span class="text-green-500 font-semibold text-lg">{{ tx.amount | formatNumber }}</span>
+            <span class="hidden md:block text-green-500 font-semibold text-lg">{{ tx.amount | formatNumber }}</span>
           </div>
         </div>
       </div>
