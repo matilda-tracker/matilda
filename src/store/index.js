@@ -2,7 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import {ethers} from 'ethers'
-import BN from "bn.js"
+import BN from 'bn.js'
 
 import {Harmony} from '@harmony-js/core'
 import {ChainID, ChainType} from '@harmony-js/utils'
@@ -13,7 +13,17 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
-        harmonyMetrics: {},
+        harmonyMetrics: {
+            onePrice: {
+                weightedAvgPrice: 0,
+                priceChangePercent: 0
+            },
+            shard0Latency: 0,
+            shard1Latency: 0,
+            shard2Latency: 0,
+            shard3Latency: 0,
+            averageLatency: 0
+        },
         theme: {},
         sideBarOpen: false,
         HRC1155TokenList: [],
@@ -129,17 +139,17 @@ export default new Vuex.Store({
             switch (localStorage.theme) {
                 case 'light':
                     commit('SET_THEME', 'dark')
-                    break;
+                    break
 
                 default:
                     commit('SET_THEME', 'light')
-                    break;
+                    break
             }
         },
         initTheme({commit}) {
-            const cachedTheme = localStorage.theme ? localStorage.theme : false;
+            const cachedTheme = localStorage.theme ? localStorage.theme : false
             //  `true` if the user has set theme to `dark` on browser/OS
-            const userPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+            const userPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches
 
             if (cachedTheme)
                 commit('SET_THEME', cachedTheme)
@@ -226,7 +236,7 @@ export default new Vuex.Store({
                     chainId: ChainID.HmyMainnet,
                 })
 
-                const contract = hmy.contracts.createContract(artifact.abi, token.tokenAddress);
+                const contract = hmy.contracts.createContract(artifact.abi, token.tokenAddress)
 
                 const decimals = await contract.methods.decimals().call()
                 token.decimals = new BN(decimals, 16).toNumber()

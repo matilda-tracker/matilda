@@ -21,11 +21,11 @@
     <div class="flex flex-wrap -mx-3">
       <div class="w-full px-3">
         <p class="text-xl font-semibold mb-4">Tokens</p>
-        <div class="w-full bg-white dark:bg-gray-700 border border-white dark:border-gray-700 rounded-lg p-4">
+        <div class="w-full bg-white dark:bg-gray-700 border border-white dark:border-gray-700 rounded-lg px-4 py-2">
           <div
               :key="token.tokenAddress"
               v-for="token in HRC20TokenList"
-              class="w-full bg-gray-100 dark:bg-gray-900 border border-white dark:border-gray-900 rounded-lg flex justify-between items-center px-4 py-2 mb-4">
+              class="w-full bg-gray-100 dark:bg-gray-900 border border-white dark:border-gray-900 rounded-lg flex justify-between items-center px-4 py-2 my-3">
             <div>
               <router-link :to="{ name: 'search', params: { address: token.tokenAddress } }">
                 <p class="font-semibold text-xl">
