@@ -17,7 +17,7 @@
 
       </div>
 
-      <window class="hidden md:block" name="login" height="auto">
+      <window :click-to-close="false" class="hidden md:block" name="login" height="auto">
         <div class="flex flex-wrap p-8 bg-white dark:bg-gray-800 border dark:border-gray-500">
           <div class="w-full mb-4">
             <p class="text-2xl">
@@ -72,7 +72,7 @@
 <!--          </div>-->
         </div>
       </window>
-      <window class="md:hidden" name="login" width="90%" height="auto">
+      <window :click-to-close="false" class="md:hidden" name="login" width="90%" height="auto">
         <div class="flex flex-wrap p-8 bg-white dark:bg-gray-800 border dark:border-gray-500">
           <div class="w-full mb-4">
             <p class="text-2xl">

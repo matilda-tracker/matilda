@@ -63,6 +63,18 @@
           </div>
         </router-link>
       </div>
+      <div
+          @click="toggleSidebar()"
+          class="w-full items-center text-blue-400 py-2 pl-4 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg cursor-pointer">
+        <router-link :to="{name: 'swap'}">
+          <div class="w-full">
+            <i class="fas fa-exchange-alt mr-4"></i>
+            <span class="text-gray-700 dark:text-gray-100">
+            Swap
+          </span>
+          </div>
+        </router-link>
+      </div>
     </div>
 
     <hr class="border-gray-200 dark:border-gray-700">

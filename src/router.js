@@ -4,6 +4,7 @@ import Home from './pages/Home'
 import Tokens from './pages/Tokens'
 import NFTs from './pages/NFTs'
 import Pools from './pages/Pools'
+import Swap from './pages/Swap'
 import Search from './pages/Search'
 
 Vue.config.productionTip = false
@@ -35,6 +36,11 @@ const router = new Router({
             path: '/pools',
             name: 'pools',
             component: Pools
+        },
+        {
+            path: '/swap',
+            name: 'swap',
+            component: Swap
         },
         {
             path: '/search/:address',

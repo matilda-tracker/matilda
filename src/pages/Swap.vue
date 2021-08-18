@@ -12,7 +12,7 @@
           </svg>
         </li>
         <li class="flex items-center">
-          <a href="#" class="text-gray-600 dark:text-gray-100">Pools</a>
+          <a href="#" class="text-gray-600 dark:text-gray-100">Swap</a>
         </li>
       </ol>
     </nav>
