@@ -190,9 +190,11 @@ export default {
 
       this.$modal.show('login')
     }
+
+    this.getBlockChainData()
   },
   methods: {
-    ...mapActions(['getTokens', 'initTheme'])
+    ...mapActions(['getTokens', 'initTheme', 'getBlockChainData'])
   }
 }
 </script>

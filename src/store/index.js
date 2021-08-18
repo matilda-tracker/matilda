@@ -13,6 +13,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        harmonyMetrics: {},
         theme: {},
         sideBarOpen: false,
         HRC1155TokenList: [],
@@ -30,6 +31,9 @@ export default new Vuex.Store({
         metaMaskWallet: undefined
     },
     getters: {
+        harmonyMetrics: state => {
+            return state.harmonyMetrics
+        },
         theme: state => {
             return state.theme
         },
@@ -53,7 +57,6 @@ export default new Vuex.Store({
         },
 
         // METAMASK
-
         metaMaskChainStatus: state => {
             return state.metaMaskChainStatus
         },
@@ -74,9 +77,12 @@ export default new Vuex.Store({
         }
     },
     mutations: {
+        SET_HARMONY_METRICS(state, value) {
+          state.harmonyMetrics = value
+        },
         SET_THEME(state, theme) {
-            state.theme = theme;
-            localStorage.theme = theme;
+            state.theme = theme
+            localStorage.theme = theme
         },
         TOGGLE_SIDEBAR(state) {
             state.sideBarOpen = !state.sideBarOpen
@@ -118,6 +124,7 @@ export default new Vuex.Store({
         }
     },
     actions: {
+        // GENERAL
         toggleTheme({commit}) {
             switch (localStorage.theme) {
                 case 'light':
@@ -141,6 +148,66 @@ export default new Vuex.Store({
             else
                 commit('SET_THEME', 'light')
 
+        },
+        setWalletAddress(context, value) {
+            context.commit('SET_WALLET_ADDRESS', value)
+        },
+        setWalletUsed(context, value) {
+            context.commit('SET_WALLET_USED', value)
+        },
+        toggleSidebar(context) {
+            context.commit('TOGGLE_SIDEBAR')
+        },
+
+        // BLOCKS
+        getLatency(context, blocks) {
+            const blocksTimestamp = blocks
+                .map((b) => new Date(b.timestamp).getTime())
+                .sort((a, b) => (a < b ? -1 : 1))
+
+            const diffs = []
+
+            for (let i = blocksTimestamp.length - 1; i > 0; i--) {
+                diffs.push(blocksTimestamp[i] - blocksTimestamp[i - 1])
+            }
+
+            return diffs.reduce((acc, t) => acc + t, 0) / diffs.length / 1000
+        },
+
+        // METRICS
+        async getBlockChainData(context) {
+            const [onePrice, txVolume, shard0, shard1, shard2, shard3] = await Promise.all([
+                axios.get(`https://explorer-v2-api.hmny.io/v0/price/actual/ONEUSDT`),
+                axios.get(`https://explorer-v2-api.hmny.io/v0/metrics/transactionCount14d`),
+                axios.get(`https://explorer-v2-api.hmny.io/v0/shard/0/block`),
+                axios.get(`https://explorer-v2-api.hmny.io/v0/shard/1/block`),
+                axios.get(`https://explorer-v2-api.hmny.io/v0/shard/2/block`),
+                axios.get(`https://explorer-v2-api.hmny.io/v0/shard/3/block`)
+            ])
+
+            let fourteenDayTxVolume = 0
+
+            await txVolume.data.map((tx) => {
+                fourteenDayTxVolume += parseInt(tx.count)
+            })
+
+            const shard0Latency = await context.dispatch('getLatency', shard0.data)
+            const shard1Latency = await context.dispatch('getLatency', shard1.data)
+            const shard2Latency = await context.dispatch('getLatency', shard2.data)
+            const shard3Latency = await context.dispatch('getLatency', shard3.data)
+
+            const averageLatency = (shard0Latency + shard1Latency + shard2Latency + shard3Latency) / 4
+
+            context.commit('SET_HARMONY_METRICS', {
+                onePrice: onePrice.data,
+                txVolume: txVolume.data,
+                fourteenDayTxVolume,
+                shard0Latency,
+                shard1Latency,
+                shard2Latency,
+                shard3Latency,
+                averageLatency
+            })
         },
         async getTokens(context) {
             const [erc1155, erc721, erc20] = await Promise.all([
@@ -172,15 +239,6 @@ export default new Vuex.Store({
             context.commit('SET_HRC1155_TOKEN_LIST', erc1155.data)
             context.commit('SET_HRC721_TOKEN_LIST', erc721.data)
             context.commit('SET_HRC20_TOKEN_LIST', erc20.data)
-        },
-        setWalletAddress(context, value) {
-            context.commit('SET_WALLET_ADDRESS', value)
-        },
-        setWalletUsed(context, value) {
-            context.commit('SET_WALLET_USED', value)
-        },
-        toggleSidebar(context) {
-            context.commit('TOGGLE_SIDEBAR')
         },
 
         // METAMASK
