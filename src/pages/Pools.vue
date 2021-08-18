@@ -22,6 +22,7 @@
 </template>
 
 <script>
+import {main} from '../plugins/pool-references/harmony_arbiter'
 
 export default {
   name: 'Pools',
@@ -38,5 +39,8 @@ export default {
       return x1 + x2
     }
   },
+  mounted() {
+    main()
+  }
 }
 </script>

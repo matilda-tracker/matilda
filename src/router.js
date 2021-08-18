@@ -33,7 +33,7 @@ const router = new Router({
             component: NFTs
         },
         {
-            path: '/pools',
+            path: '/pool-references',
             name: 'pools',
             component: Pools
         },
