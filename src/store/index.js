@@ -12,6 +12,7 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        theme: {},
         sideBarOpen: false,
         HRC1155TokenList: [],
         HRC721TokenList: [],
@@ -28,6 +29,9 @@ export default new Vuex.Store({
         metaMaskWallet: undefined
     },
     getters: {
+        theme: state => {
+            return state.theme
+        },
         sideBarOpen: state => {
             return state.sideBarOpen
         },
@@ -69,6 +73,10 @@ export default new Vuex.Store({
         }
     },
     mutations: {
+        SET_THEME(state, theme) {
+            state.theme = theme;
+            localStorage.theme = theme;
+        },
         TOGGLE_SIDEBAR(state) {
             state.sideBarOpen = !state.sideBarOpen
         },
@@ -109,7 +117,30 @@ export default new Vuex.Store({
         }
     },
     actions: {
+        toggleTheme({commit}) {
+            switch (localStorage.theme) {
+                case 'light':
+                    commit('SET_THEME', 'dark')
+                    break;
 
+                default:
+                    commit('SET_THEME', 'light')
+                    break;
+            }
+        },
+        initTheme({commit}) {
+            const cachedTheme = localStorage.theme ? localStorage.theme : false;
+            //  `true` if the user has set theme to `dark` on browser/OS
+            const userPrefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+
+            if (cachedTheme)
+                commit('SET_THEME', cachedTheme)
+            else if (userPrefersDark)
+                commit('SET_THEME', 'dark')
+            else
+                commit('SET_THEME', 'light')
+
+        },
         async getTokens(context) {
             const [erc1155, erc721, erc20] = await Promise.all([
                 axios.get(`https://explorer-v2-api.hmny.io/v0/erc1155/address/${context.state.walletAddress}/balances`),

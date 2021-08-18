@@ -2,6 +2,7 @@
 
 body {
   font-family: Poppins, sans-serif;
+  @apply text-black dark:text-white;
 }
 
 body::-webkit-scrollbar {
@@ -26,4 +27,11 @@ body::-webkit-scrollbar {
     pointer-events: none;
     position: fixed;
   }
+}
+
+.hamburger-color-light {
+  fill: #000000;
+}
+.hamburger-color-dark {
+  fill: #ffffff;
 }

@@ -5,7 +5,7 @@
     <nav class="text-sm font-semibold mb-6" aria-label="Breadcrumb">
       <ol class="list-none p-0 inline-flex">
         <li class="flex items-center text-blue-500">
-          <a href="#" class="text-gray-700">Home</a>
+          <a href="#" class="text-gray-700 dark:text-gray-100">Home</a>
         </li>
       </ol>
     </nav>
@@ -24,8 +24,8 @@
     <div class="flex flex-wrap -mx-3">
       <div class="w-full px-3">
         <p class="text-xl font-semibold mb-4">Recent Transactions</p>
-        <div class="w-full bg-white border rounded-lg p-4">
-<!--          <div class="w-full bg-gray-100 border rounded-lg flex justify-between items-center px-4 py-2 mb-4">-->
+        <div class="w-full bg-white dark:bg-gray-700 border border-white dark:border-gray-700 rounded-lg p-4">
+<!--          <div class="w-full bg-gray-100 dark:bg-gray-900 border border-white dark:border-gray-900 rounded-lg flex justify-between items-center px-4 py-2 mb-4">-->
 <!--            <div>-->
 <!--              <p class="font-semibold text-xl">0x987sv98wu....fh93h2h93r23</p>-->
 <!--              <p>XYA</p>-->
