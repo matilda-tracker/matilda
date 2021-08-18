@@ -22,10 +22,15 @@
 </template>
 
 <script>
-import {main} from '../plugins/pool-references/harmony_arbiter'
+import {main} from '../plugins/pool-references/farms/viperCommunity'
 
 export default {
   name: 'Pools',
+  data() {
+    return {
+      data: {}
+    }
+  },
   filters: {
     formatNumber(nStr) {
       nStr += ''
@@ -39,8 +44,8 @@ export default {
       return x1 + x2
     }
   },
-  mounted() {
-    main()
+  async mounted() {
+    this.data = await main()
   }
 }
 </script>

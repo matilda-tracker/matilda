@@ -1,5 +1,5 @@
 import {ethers} from 'ethers'
-import {getHarmonyPrices, loadHarmonyChefContract} from './harmony_helpers'
+import {getHarmonyPrices, loadHarmonyChefContract} from '../harmonyHelper'
 
 const ARB_CHEF_ABI = [{
     'inputs': [{
@@ -633,7 +633,7 @@ export async function main() {
         App.web3Provider = window.ethereum
         App.provider = new ethers.providers.Web3Provider(window.ethereum)
 
-        const accounts = await window.ethereum.request({ method: 'eth_requestAccounts' })
+        const accounts = await window.ethereum.request({method: 'eth_requestAccounts'})
         App.YOUR_ADDRESS = accounts[0]
 
         console.log(`Initialized ${App.YOUR_ADDRESS}`)
@@ -652,8 +652,7 @@ export async function main() {
         const tokens = {}
         const prices = await getHarmonyPrices()
 
-        await loadHarmonyChefContract(App, tokens, prices, ARB_CHEF, ARB_CHEF_ADDR, ARB_CHEF_ABI, rewardTokenTicker,
-            'govToken', null, rewardsPerWeek, 'pendingReward', [0, 1, 2, 3, 4, 5])
+        return await loadHarmonyChefContract(App, tokens, prices, ARB_CHEF, ARB_CHEF_ADDR, ARB_CHEF_ABI, rewardTokenTicker, 'govToken', null, rewardsPerWeek, 'pendingReward', [0, 1, 2, 3, 4, 5])
     }
 }
   

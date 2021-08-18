@@ -1,4 +1,4 @@
-import {lookUpPrices} from './ethers_helper'
+import {lookUpPrices, returnChefPool, formatMoney, getHrc20Prices} from './chefHelper'
 import {ethers} from 'ethers'
 
 import HRC20_ABI from '../abi/POOL_HRC.json'
@@ -6,9 +6,15 @@ import UNI_ABI from '../abi/POOL_UNI.json'
 
 const HarmonyTokens = [
     { "id": "binance-usd", "symbol": "bscBUSD", "contract": "0x0aB43550A6915F9f67d0c454C2E90385E6497EaA"},
+    { "id": "usd-coin", "symbol": "1USDC", "contract": "0x985458E523dB3d53125813eD68c274899e9DfAb4"},
     { "id": "tether", "symbol": "1USDT", "contract": "0x3C2B8Be99c50593081EAA2A724F0B8285F5aba8f"},
     { "id": "harmony", "symbol": "WONE", "contract": "0xcF664087a5bB0237a0BAd6742852ec6c8d69A27a"},
-    { "id": "sushi", "symbol": "SUSHI", "contract": "0xBEC775Cb42AbFa4288dE81F387a9b1A3c4Bc552A"}
+    { "id": "sushi", "symbol": "SUSHI", "contract": "0xBEC775Cb42AbFa4288dE81F387a9b1A3c4Bc552A"},
+    { "id": "dai", "symbol": "1DAI", "contract": "0xEf977d2f931C1978Db5F6747666fa1eACB0d0339"},
+    { "id": "rendoge", "symbol": "1renDOGE", "contract": "0x6C7bA6c44871655968e2aE85116Becb79c6AC352"},
+    { "id": "wrapped-bitcoin", "symbol": "bscBTCB", "contract": "0x34224dCF981dA7488FdD01c7fdd64E74Cd55DcF7"},
+    { "id": "binance-eth", "symbol": "bscETH", "contract": "0x783ee3e955832a3d52ca4050c4c251731c156020"},
+    { "id": "freyala", "symbol": "XYA", "contract": "0x9b68BF4bF89c115c721105eaf6BD5164aFcc51E4"}
 ];
 
 export async function getHarmonyPrices() {
@@ -120,8 +126,7 @@ export async function getHarmonyToken(App, tokenAddress, stakingAddress) {
     }
 }
 
-export async function loadHarmonySynthetixPoolInfo(App, tokens, prices, stakingAbi, stakingAddress,
-                                            rewardTokenFunction, stakeTokenFunction) {
+export async function loadHarmonySynthetixPoolInfo(App, tokens, prices, stakingAbi, stakingAddress, rewardTokenFunction, stakeTokenFunction) {
     const STAKING_POOL = new ethers.Contract(stakingAddress, stakingAbi, App.provider)
 
     if (!STAKING_POOL.callStatic[stakeTokenFunction]) {
@@ -162,7 +167,7 @@ export async function loadHarmonySynthetixPoolInfo(App, tokens, prices, stakingA
     const rewardTokenTicker = rewardToken.symbol
 
     // eslint-disable-next-line no-undef
-    const poolPrices = getPoolPrices(tokens, prices, stakeToken, 'Harmony')
+    const poolPrices = getHrc20Prices(prices, stakeToken, 'Harmony')
 
     if (!poolPrices) {
         console.log(`Couldn't calculate prices for pool ${stakeTokenAddress}`)
@@ -183,7 +188,7 @@ export async function loadHarmonySynthetixPoolInfo(App, tokens, prices, stakingA
 
     const usdPerWeek = weeklyRewards * rewardTokenPrice
 
-    const staked_tvl = poolPrices.staked_tvl
+    const stakedTVL = poolPrices.stakedTVL
 
     const userStaked = await STAKING_POOL.balanceOf(App.YOUR_ADDRESS) / 10 ** stakeToken.decimals
 
@@ -202,7 +207,7 @@ export async function loadHarmonySynthetixPoolInfo(App, tokens, prices, stakingA
         rewardTokenPrice,
         weeklyRewards,
         usdPerWeek,
-        staked_tvl,
+        stakedTVL,
         userStaked,
         userUnstaked,
         earned
@@ -216,7 +221,7 @@ export async function loadHarmonySynthetixPool(App, tokens, prices, abi, address
     return await printSynthetixPool(App, info, 'Harmony')
 }
 
-export async function loadHarmonyBasisFork(data) {
+export async function loadHarmonDDyBasisFork(data) {
     // eslint-disable-next-line no-undef
     const App = await init_ethers()
 
@@ -229,21 +234,21 @@ export async function loadHarmonyBasisFork(data) {
 
     let p1 = await loadHarmonySynthetixPool(App, tokens, prices, data.PoolABI,
         data.SharePool.address, data.SharePool.rewardToken, data.SharePool.stakeToken)
-    totalStaked += p1.staked_tvl
+    totalStaked += p1.stakedTVL
 
     if (data.SharePool2) {
         let p3 = await loadHarmonySynthetixPool(App, tokens, prices, data.PoolABI,
             data.SharePool2.address, data.SharePool2.rewardToken, data.SharePool2.stakeToken)
-        totalStaked += p3.staked_tvl
+        totalStaked += p3.stakedTVL
     }
 
     let p2 = await loadHarmonySynthetixPool(App, tokens, prices, data.PoolABI,
         data.CashPool.address, data.CashPool.rewardToken, data.CashPool.stakeToken)
-    totalStaked += p2.staked_tvl
+    totalStaked += p2.stakedTVL
 
     if (data.SeedBanks) {
         let p = await loadMultipleHarmonySynthetixPools(App, tokens, prices, data.SeedBanks)
-        totalStaked += p.staked_tvl
+        totalStaked += p.stakedTVL
         if (p.totalUserStaked > 0) {
             // eslint-disable-next-line no-undef
             console.log(`You are staking a total of $${formatMoney(p.totalUserStaked)} at an APR of ${(p.totalApr * 100).toFixed(2)}%\n`)
@@ -257,14 +262,14 @@ export async function loadHarmonyBasisFork(data) {
                 let br = await loadBoardroom(App, prices, boardroom.address, data.Oracle, data.UniswapLP, data.Cash,
                     data.ShareTicker, data.CashTicker, data.ExpansionsPerDay, data.MaximumExpansion,
                     data.Decimals, boardroom.ratio, data.TargetMantissa)
-                totalStaked += br.staked_tvl
+                totalStaked += br.stakedTVL
             }
         } else {
             // eslint-disable-next-line no-undef
             let br = await loadBoardroom(App, prices, data.Boardroom, data.Oracle, data.UniswapLP, data.Cash,
                 data.ShareTicker, data.CashTicker, data.ExpansionsPerDay, data.MaximumExpansion,
                 data.Decimals, 1, data.TargetMantissa)
-            totalStaked += br.staked_tvl
+            totalStaked += br.stakedTVL
         }
     }
 
@@ -299,9 +304,7 @@ export async function getHarmonyPoolInfo(app, chefContract, chefAddress, poolInd
     }
 }
 
-export async function loadHarmonyChefContract(App, tokens, prices, chef, chefAddress, chefAbi, rewardTokenTicker,
-                                       rewardTokenFunction, rewardsPerBlockFunction, rewardsPerWeekFixed, pendingRewardsFunction,
-                                       deathPoolIndices, hideFooter) {
+export async function loadHarmonyChefContract(App, tokens, prices, chef, chefAddress, chefAbi, rewardTokenTicker, rewardTokenFunction, rewardsPerBlockFunction, rewardsPerWeekFixed, pendingRewardsFunction, deathPoolIndices, hideFooter) {
     const chefContract = chef ?? new ethers.Contract(chefAddress, chefAbi, App.provider)
 
     const poolCount = parseInt(await chefContract.poolLength(), 10)
@@ -333,11 +336,11 @@ export async function loadHarmonyChefContract(App, tokens, prices, chef, chefAdd
         deathPoolIndices.map(i => poolInfos[i])
             .map(poolInfo =>
                 // eslint-disable-next-line no-undef
-                poolInfo.poolToken ? getPoolPrices(tokens, prices, poolInfo.poolToken, 'Harmony') : undefined)
+                poolInfo.poolToken ? getHrc20Prices(prices, poolInfo.poolToken, 'Harmony') : undefined)
     }
 
     // eslint-disable-next-line no-undef
-    const poolPrices = poolInfos.map(poolInfo => poolInfo.poolToken ? getPoolPrices(tokens, prices, poolInfo.poolToken, 'Harmony') : undefined)
+    const poolPrices = poolInfos.map(poolInfo => poolInfo.poolToken ? getHrc20Prices(prices, poolInfo.poolToken, 'Harmony') : undefined)
 
 
     console.log('Finished reading smart contracts.\n')
@@ -346,7 +349,7 @@ export async function loadHarmonyChefContract(App, tokens, prices, chef, chefAdd
     for (let i = 0; i < poolCount; i++) {
         if (poolPrices[i]) {
             // eslint-disable-next-line no-undef
-            const apr = printChefPool(App, chefAbi, chefAddress, prices, tokens, poolInfos[i], i, poolPrices[i],
+            const apr = returnChefPool(App, chefAbi, chefAddress, prices, tokens, poolInfos[i], i, poolPrices[i],
                 totalAllocPoints, rewardsPerWeek, rewardTokenTicker, rewardTokenAddress,
                 pendingRewardsFunction, null, null, 'bsc')
             aprs.push(apr)
@@ -390,14 +393,14 @@ export async function loadMultipleHarmonySynthetixPools(App, tokens, prices, poo
     for (const i of infos) {
         // eslint-disable-next-line no-undef
         let p = await printSynthetixPool(App, i, 'Harmony')
-        totalStaked += p.staked_tvl || 0
+        totalStaked += p.stakedTVL || 0
         totalUserStaked += p.userStaked || 0
         if (p.userStaked > 0) {
             individualAPRs.push(p.userStaked * p.apr / 100)
         }
     }
     let totalApr = totalUserStaked === 0 ? 0 : individualAPRs.reduce((x, y) => x + y, 0) / totalUserStaked
-    return {staked_tvl: totalStaked, totalUserStaked, totalApr}
+    return {stakedTVL: totalStaked, totalUserStaked, totalApr}
 }
 
 export async function loadMultipleHarmonySynthetixPoolsSequential(App, tokens, prices, pools) {
@@ -405,12 +408,12 @@ export async function loadMultipleHarmonySynthetixPoolsSequential(App, tokens, p
     for (const p of pools) {
         let res = await loadHarmonySynthetixPool(App, tokens, prices, p.abi, p.address, p.rewardTokenFunction, p.stakeTokenFunction)
         if (!res) continue
-        totalStaked += res.staked_tvl || 0
+        totalStaked += res.stakedTVL || 0
         totalUserStaked += res.userStaked || 0
         if (res.userStaked > 0) {
             individualAPRs.push(res.userStaked * res.apr / 100)
         }
     }
     let totalApr = totalUserStaked === 0 ? 0 : individualAPRs.reduce((x, y) => x + y, 0) / totalUserStaked
-    return {staked_tvl: totalStaked, totalUserStaked, totalApr}
+    return {stakedTVL: totalStaked, totalUserStaked, totalApr}
 }
