@@ -2,6 +2,7 @@ import Vue from 'vue'
 import Vuex from 'vuex'
 import axios from 'axios'
 import {ethers} from 'ethers'
+import BN from "bn.js"
 
 import {Harmony} from '@harmony-js/core'
 import {ChainID, ChainType} from '@harmony-js/utils'
@@ -159,13 +160,13 @@ export default new Vuex.Store({
                 })
 
                 const contract = hmy.contracts.createContract(artifact.abi, token.tokenAddress);
+
+                const decimals = await contract.methods.decimals().call()
+                token.decimals = new BN(decimals, 16).toNumber()
+
                 token.name = await contract.methods.name().call()
-
-                token.balance = parseFloat(ethers.utils.formatEther(token.balance)).toFixed(4)
-            })
-
-            erc20.data.sort((a, b) => {
-                return b.balance - a.balance
+                token.symbol = await contract.methods.symbol().call()
+                token.balance = parseFloat(ethers.utils.formatUnits(token.balance, token.decimals)).toFixed(3)
             })
 
             context.commit('SET_HRC1155_TOKEN_LIST', erc1155.data)

@@ -29,7 +29,7 @@
             <div>
               <router-link :to="{ name: 'search', params: { address: token.tokenAddress } }">
                 <p class="font-semibold text-xl">
-                  {{ token.name }}
+                  {{ token.name }} ({{ token.symbol }})
                 </p>
 
                 <span class="md:hidden text-xs md:text-lg text-green-500 font-semibold">
@@ -63,19 +63,24 @@ export default {
           address.substr(0, 10) +
           "..." +
           address.substr(address.length - 5, address.length)
-      );
+      )
     },
     formatNumber(nStr) {
-      nStr += '';
-      let x = nStr.split('.');
-      let x1 = x[0];
-      let x2 = x.length > 1 ? '.' + x[1] : '';
-      let rgx = /(\d+)(\d{3})/;
+      nStr += ''
+      let x = nStr.split('.')
+      let x1 = x[0]
+      let x2 = x.length > 1 ? '.' + x[1] : ''
+      let rgx = /(\d+)(\d{3})/
       while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2');
+        x1 = x1.replace(rgx, '$1' + ',' + '$2')
       }
-      return x1 + x2;
+      return x1 + x2
     }
+  },
+  mounted() {
+    this.HRC20TokenList.sort((a, b) => {
+      return b.balance - a.balance
+    })
   },
   computed: {
     ...mapGetters([

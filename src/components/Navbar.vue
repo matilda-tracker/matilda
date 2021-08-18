@@ -41,7 +41,7 @@
 
 <script>
 import {mapState} from 'vuex'
-import ThemeToggler from "./ThemeToggler.vue";
+import ThemeToggler from "./ThemeToggler.vue"
 
 export default {
   name: 'Navbar',
