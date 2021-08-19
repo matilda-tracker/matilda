@@ -8,7 +8,7 @@
     <div class="w-full h-20 border-b border-gray-200 dark:border-gray-700 flex px-4 items-center mb-8">
       <p class="font-semibold text-3xl text-blue-400 pl-4">
         <router-link :to="{ name: 'home' }">
-          HARDASH
+          Matilda
         </router-link>
       </p>
     </div>
@@ -20,10 +20,10 @@
           class="w-full items-center text-blue-400 py-2 pl-4 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg cursor-pointer">
         <router-link :to="{name: 'home'}">
           <div class="w-full">
-            <i class="fas fa-home mr-4"></i>
+            <i class="fas fa-home mr-4 w-4"></i>
             <span class="text-gray-700 dark:text-gray-100">
-            Dashboard
-          </span>
+              Dashboard
+            </span>
           </div>
         </router-link>
       </div>
@@ -32,10 +32,10 @@
           class="w-full items-center text-blue-400 py-2 pl-4 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg cursor-pointer">
         <router-link :to="{name: 'tokens'}">
           <div class="w-full">
-            <i class="fas fa-coins mr-4"></i>
+            <i class="fas fa-coins mr-4 w-4"></i>
             <span class="text-gray-700 dark:text-gray-100">
-            Tokens
-          </span>
+              Tokens
+            </span>
           </div>
         </router-link>
       </div>
@@ -44,10 +44,10 @@
           class="w-full items-center text-blue-400 py-2 pl-4 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg cursor-pointer">
         <router-link :to="{name: 'nfts'}">
           <div class="w-full">
-            <i class="fas fa-images mr-4"></i>
+            <i class="fas fa-images mr-4 w-4"></i>
             <span class="text-gray-700 dark:text-gray-100">
-            NFTs
-          </span>
+              NFTs
+            </span>
           </div>
         </router-link>
       </div>
@@ -56,10 +56,10 @@
           class="w-full items-center text-blue-400 py-2 pl-4 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg cursor-pointer">
         <router-link :to="{name: 'pools'}">
           <div class="w-full">
-            <i class="fas fa-piggy-bank mr-4"></i>
+            <i class="fas fa-piggy-bank mr-4 w-4"></i>
             <span class="text-gray-700 dark:text-gray-100">
-            Pools
-          </span>
+              Pools
+            </span>
           </div>
         </router-link>
       </div>
@@ -68,12 +68,35 @@
           class="w-full items-center text-blue-400 py-2 pl-4 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg cursor-pointer">
         <router-link :to="{name: 'swap'}">
           <div class="w-full">
-            <i class="fas fa-exchange-alt mr-4"></i>
+            <i class="fas fa-exchange-alt mr-4 w-4"></i>
             <span class="text-gray-700 dark:text-gray-100">
-            Swap
-          </span>
+              Swap
+            </span>
           </div>
         </router-link>
+      </div>
+      <div>
+        <div
+            @click="toggleSidebar()"
+            v-if="walletUsed === 'onewallet'"
+            class="w-full items-center text-blue-400 py-2 pl-4 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg cursor-pointer">
+          <router-link :to="{name: 'staking'}">
+            <div class="w-full">
+              <i class="fas fa-handshake mr-4 w-4"></i>
+              <span class="text-gray-700 dark:text-gray-100">
+                Staking
+              </span>
+            </div>
+          </router-link>
+        </div>
+        <div v-else class="w-full items-center text-blue-400 py-2 pl-4 rounded-lg">
+          <div class="w-full">
+            <i class="fas fa-handshake mr-4 w-4"></i>
+            <span class="line-through text-gray-300 dark:text-gray-700">
+              Staking
+            </span>
+          </div>
+        </div>
       </div>
     </div>
 
@@ -88,7 +111,8 @@
           </strong>
         </p>
         <p class="pl-4 text-sm">
-          $ {{ parseFloat(harmonyMetrics.onePrice.weightedAvgPrice).toFixed(2) }} ({{ parseFloat(harmonyMetrics.onePrice.priceChangePercent).toFixed(2) }}%)
+          $ {{ parseFloat(harmonyMetrics.onePrice.weightedAvgPrice).toFixed(2) }}
+          ({{ parseFloat(harmonyMetrics.onePrice.priceChangePercent).toFixed(2) }}%)
         </p>
       </div>
       <div class="hidden md:block mb-2">
@@ -131,12 +155,12 @@
 </template>
 
 <script>
-import {mapState, mapActions} from 'vuex'
+import {mapGetters, mapActions} from 'vuex'
 
 export default {
   name: 'Sidebar',
   computed: {
-    ...mapState(['sideBarOpen', 'harmonyMetrics'])
+    ...mapGetters(['walletUsed', 'sideBarOpen', 'harmonyMetrics'])
   },
   methods: {
     ...mapActions(['toggleSidebar'])

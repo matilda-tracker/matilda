@@ -22,15 +22,9 @@
 </template>
 
 <script>
-import {main} from '../plugins/pool-references/farms/viperCommunity'
 
 export default {
   name: 'Pools',
-  data() {
-    return {
-      data: {}
-    }
-  },
   filters: {
     formatNumber(nStr) {
       nStr += ''
@@ -43,9 +37,6 @@ export default {
       }
       return x1 + x2
     }
-  },
-  async mounted() {
-    this.data = await main()
   }
 }
 </script>

@@ -129,6 +129,7 @@ import {Harmony} from '@harmony-js/core'
 import {ChainID, ChainType} from '@harmony-js/utils'
 
 import artifact from '../plugins/abi/HRC20.json'
+import BN from 'bn.js'
 
 export default {
   name: 'Search',
@@ -176,10 +177,13 @@ export default {
     const contract = hmy.contracts.createContract(artifact.abi, this.contractAddress)
     contractInfo.data.name = await contract.methods.name().call()
 
+    const decimals = await contract.methods.decimals().call()
+    contractInfo.data.decimals = new BN(decimals, 16).toNumber()
+
     this.contractInfo = contractInfo.data
 
     holdersList.data.map((token) => {
-      token.balance = parseFloat(ethers.utils.formatEther(token.balance)).toFixed(4)
+      token.balance = parseFloat(ethers.utils.formatUnits(token.balance, contractInfo.data.decimals)).toFixed(3)
     })
 
     holdersList.data.sort((a, b) => {

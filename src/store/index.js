@@ -13,6 +13,20 @@ Vue.use(Vuex)
 
 export default new Vuex.Store({
     state: {
+        // WALLET
+        walletAddress: undefined,
+        walletUsed: undefined,
+        walletConnected: undefined,
+        wallet: undefined,
+
+        // NETWORK
+        chainId: undefined,
+
+        // GENERAL
+        theme: {},
+        sideBarOpen: false,
+
+        // METRICS
         harmonyMetrics: {
             onePrice: {
                 weightedAvgPrice: 0,
@@ -24,32 +38,47 @@ export default new Vuex.Store({
             shard3Latency: 0,
             averageLatency: 0
         },
-        theme: {},
-        sideBarOpen: false,
+
+        // USER SPECIFIC
         HRC1155TokenList: [],
         HRC721TokenList: [],
         HRC20TokenList: [],
-        walletAddress: undefined,
-        walletUsed: undefined,
-
-        // METAMASK
-        metaMaskChainStatus: undefined,
-        metaMaskChainId: undefined,
-        metaMaskLoggedIn: undefined,
-        metaMaskConnected: undefined,
-        metaMaskAccount: undefined,
-        metaMaskWallet: undefined
+        oneBalance: 0
     },
     getters: {
-        harmonyMetrics: state => {
-            return state.harmonyMetrics
+        // WALLET
+        walletAddress: state => {
+            return state.walletAddress
         },
+        walletUsed: state => {
+            return state.walletUsed
+        },
+        walletConnected: state => {
+            return state.walletConnected
+        },
+        wallet: state => {
+            return state.wallet
+        },
+
+        // NETWORK
+        chainId: state => {
+            return state.chainId
+        },
+
+        // GENERAL
         theme: state => {
             return state.theme
         },
         sideBarOpen: state => {
             return state.sideBarOpen
         },
+
+        // METRICS
+        harmonyMetrics: state => {
+            return state.harmonyMetrics
+        },
+
+        // USER SPECIFIC
         HRC1155TokenList: state => {
             return state.HRC1155TokenList
         },
@@ -59,37 +88,31 @@ export default new Vuex.Store({
         HRC20TokenList: state => {
             return state.HRC20TokenList
         },
-        walletAddress: state => {
-            return state.walletAddress
-        },
-        walletUsed: state => {
-            return state.walletUsed
-        },
-
-        // METAMASK
-        metaMaskChainStatus: state => {
-            return state.metaMaskChainStatus
-        },
-        metaMaskChainId: state => {
-            return state.metaMaskChainId
-        },
-        metaMaskLoggedIn: state => {
-            return state.metaMaskLoggedIn
-        },
-        metaMaskConnected: state => {
-            return state.metaMaskConnected
-        },
-        metaMaskAccount: state => {
-            return state.metaMaskAccount
-        },
-        setMetaMaskWallet: state => {
-            return state.setMetaMaskWallet
+        oneBalance: state => {
+            return state.oneBalance
         }
     },
     mutations: {
-        SET_HARMONY_METRICS(state, value) {
-          state.harmonyMetrics = value
+        // WALLET
+        SET_WALLET_ADDRESS(state, value) {
+            state.walletAddress = value
         },
+        SET_WALLET_USED(state, value) {
+            state.walletUsed = value
+        },
+        SET_WALLET_CONNECTION_STATUS(state, value) {
+            state.walletConnected = value
+        },
+        SET_WALLET(state, value) {
+            state.wallet = value
+        },
+
+        // NETWORK
+        SET_CHAIN_ID(state, value) {
+            state.chainId = value
+        },
+
+        // GENERAL
         SET_THEME(state, theme) {
             state.theme = theme
             localStorage.theme = theme
@@ -97,6 +120,13 @@ export default new Vuex.Store({
         TOGGLE_SIDEBAR(state) {
             state.sideBarOpen = !state.sideBarOpen
         },
+
+        // METRICS
+        SET_HARMONY_METRICS(state, value) {
+          state.harmonyMetrics = value
+        },
+
+        // USER SPECIFIC
         SET_HRC1155_TOKEN_LIST(state, value) {
             state.HRC1155TokenList = value
         },
@@ -106,34 +136,30 @@ export default new Vuex.Store({
         SET_HRC20_TOKEN_LIST(state, value) {
             state.HRC20TokenList = value
         },
-        SET_WALLET_ADDRESS(state, value) {
-            state.walletAddress = value
-        },
-        SET_WALLET_USED(state, value) {
-            state.walletUsed = value
-        },
-
-        // METAMASK
-        SET_METAMASK_CHAIN_STATUS(state, value) {
-            state.metaMaskChainStatus = value
-        },
-        SET_METAMASK_CHAIN_ID(state, value) {
-            state.metaMaskChainId = value
-        },
-        SET_METAMASK_LOGGED_IN(state, value) {
-            state.metaMaskLoggedIn = value
-        },
-        SET_METAMASK_CONNECTION_STATUS(state, value) {
-            state.metaMaskConnected = value
-        },
-        SET_METAMASK_ACCOUNT(state, value) {
-            state.metaMaskAccount = value
-        },
-        SET_METAMASK_WALLET(state, value) {
-            state.metaMaskWallet = value
+        SET_ONE_BALANCE(state, value) {
+            state.oneBalance = value
         }
     },
     actions: {
+        // WALLET
+        setWalletAddress(context, value) {
+            context.commit('SET_WALLET_ADDRESS', value)
+        },
+        setWalletUsed(context, value) {
+            context.commit('SET_WALLET_USED', value)
+        },
+        setWalletConnectionStatus(context, value) {
+            context.commit('SET_WALLET_CONNECTION_STATUS', value)
+        },
+        setWallet(context, value) {
+            context.commit('SET_WALLET', value)
+        },
+
+        // NETWORK
+        setChainId(context, value) {
+            context.commit('SET_CHAIN_ID', value)
+        },
+
         // GENERAL
         toggleTheme({commit}) {
             switch (localStorage.theme) {
@@ -159,17 +185,11 @@ export default new Vuex.Store({
                 commit('SET_THEME', 'light')
 
         },
-        setWalletAddress(context, value) {
-            context.commit('SET_WALLET_ADDRESS', value)
-        },
-        setWalletUsed(context, value) {
-            context.commit('SET_WALLET_USED', value)
-        },
         toggleSidebar(context) {
             context.commit('TOGGLE_SIDEBAR')
         },
 
-        // BLOCKS
+        // METRICS
         getLatency(context, blocks) {
             const blocksTimestamp = blocks
                 .map((b) => new Date(b.timestamp).getTime())
@@ -183,8 +203,6 @@ export default new Vuex.Store({
 
             return diffs.reduce((acc, t) => acc + t, 0) / diffs.length / 1000
         },
-
-        // METRICS
         async getBlockChainData(context) {
             const [onePrice, txVolume, shard0, shard1, shard2, shard3] = await Promise.all([
                 axios.get(`https://explorer-v2-api.hmny.io/v0/price/actual/ONEUSDT`),
@@ -219,14 +237,25 @@ export default new Vuex.Store({
                 averageLatency
             })
         },
+
+        // USER SPECIFIC
         async getTokens(context) {
-            const [erc1155, erc721, erc20] = await Promise.all([
+            const [erc1155, erc721, erc20, one] = await Promise.all([
                 axios.get(`https://explorer-v2-api.hmny.io/v0/erc1155/address/${context.state.walletAddress}/balances`),
                 axios.get(`https://explorer-v2-api.hmny.io/v0/erc721/address/${context.state.walletAddress}/balances`),
-                axios.get(`https://explorer-v2-api.hmny.io/v0/erc20/address/${context.state.walletAddress}/balances`)
+                axios.get(`https://explorer-v2-api.hmny.io/v0/erc20/address/${context.state.walletAddress}/balances`),
+                axios.post('https://rpc.s0.t.hmny.io', {
+                    'jsonrpc': '2.0',
+                    'id': 1,
+                    'method': 'hmyv2_getBalance',
+                    'params': [
+                        context.state.walletAddress
+                    ]
+                })
             ])
 
             context.dispatch('setTokens', {erc1155, erc721, erc20})
+            context.commit('SET_ONE_BALANCE', one.data.result)
         },
         async setTokens(context, {erc1155, erc721, erc20}) {
             await erc20.data.map(async (token) => {
@@ -249,26 +278,6 @@ export default new Vuex.Store({
             context.commit('SET_HRC1155_TOKEN_LIST', erc1155.data)
             context.commit('SET_HRC721_TOKEN_LIST', erc721.data)
             context.commit('SET_HRC20_TOKEN_LIST', erc20.data)
-        },
-
-        // METAMASK
-        setMetaMaskChainStatus(context, value) {
-            context.commit('SET_METAMASK_CHAIN_STATUS', value)
-        },
-        setMetaMaskChainId(context, value) {
-            context.commit('SET_METAMASK_CHAIN_ID', value)
-        },
-        setMetaMaskLoggedIn(context, value) {
-            context.commit('SET_METAMASK_LOGGED_IN', value)
-        },
-        setMetaMaskConnectionStatus(context, value) {
-            context.commit('SET_METAMASK_CONNECTION_STATUS', value)
-        },
-        setMetaMaskAccount(context, value) {
-            context.commit('SET_METAMASK_ACCOUNT', value)
-        },
-        setMetaMaskWallet(context, value) {
-            context.commit('SET_METAMASK_WALLET', value)
         }
     }
 })

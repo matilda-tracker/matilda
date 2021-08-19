@@ -3,17 +3,12 @@ import {ethers} from 'ethers'
 
 export default {
     computed: {
-        ...mapGetters(['metaMaskLoggedIn', 'metaMaskAccount', 'metaMaskConnected'])
+        ...mapGetters(['walletAddress', 'walletConnected'])
     },
     methods: {
-        ...mapActions(['setWalletAddress', 'setWalletUsed', 'setMetaMaskChainStatus', 'setMetaMaskChainId', 'setMetaMaskAccount', 'setMetaMaskLoggedIn', 'setMetaMaskWallet', 'setMetaMaskConnectionStatus']),
+        ...mapActions(['setWallet', 'setWalletAddress', 'setWalletUsed', 'setWalletConnectionStatus', 'setChainId']),
 
         async connectMetaMask() {
-            if (this.metaMaskAccount === true) {
-                await this.disconnectMetaMask()
-                return
-            }
-
             if (typeof window.ethereum !== undefined) {
                 const provider = new ethers.providers.Web3Provider(window.ethereum)
                 await provider.send("eth_requestAccounts", [])
@@ -21,37 +16,25 @@ export default {
                 const network = await provider.getNetwork()
 
                 const account = await signer.getAddress()
-                this.setMetaMaskAccount(account)
                 this.setWalletAddress(account.toLowerCase())
-                this.setMetaMaskChainId(network.chainId)
+                this.setChainId(network.chainId)
 
-                if (network.chainId !== 1666600000) {
-                    this.setMetaMaskChainStatus('wrong')
-                    return
-                } else {
-                    this.setMetaMaskChainStatus('correct')
-                }
-
-                this.setMetaMaskWallet({signer})
-                this.setMetaMaskLoggedIn(true)
-
-                if (this.metaMaskLoggedIn === true) {
-                    this.setMetaMaskConnectionStatus(!this.metaMaskConnected)
-                    this.setWalletUsed('metamask')
-                }
+                this.setWallet({signer})
+                this.setWalletConnectionStatus(!this.walletConnected)
+                this.setWalletUsed('metamask')
+            } else {
+                console.log('No metamask installed...')
             }
-
         },
 
         async disconnectMetaMask() {
             await this.setDefaultWallet()
-            this.setMetaMaskLoggedIn(false)
-            this.setMetaMaskConnectionStatus(!this.metaMaskConnected)
+            this.setWalletConnectionStatus(!this.walletConnected)
         },
 
         async setDefaultWallet() {
-            if (!this.metaMaskLoggedIn) {
-                this.setMetaMaskAccount(["0x0000000000000000000000000000000000000003"])
+            if (!this.walletConnected) {
+                this.setWalletAddress(["0x0000000000000000000000000000000000000003"])
             }
         }
     }

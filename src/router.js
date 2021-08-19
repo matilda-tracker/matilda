@@ -5,7 +5,9 @@ import Tokens from './pages/Tokens'
 import NFTs from './pages/NFTs'
 import Pools from './pages/Pools'
 import Swap from './pages/Swap'
+import Staking from './pages/Staking'
 import Search from './pages/Search'
+import Validator from './pages/Validator'
 
 Vue.config.productionTip = false
 
@@ -43,9 +45,19 @@ const router = new Router({
             component: Swap
         },
         {
+            path: '/staking',
+            name: 'staking',
+            component: Staking
+        },
+        {
             path: '/search/:address',
             name: 'search',
             component: Search
+        },
+        {
+            path: '/validator/:address',
+            name: 'validator',
+            component: Validator
         },
         {
             path: '*',
