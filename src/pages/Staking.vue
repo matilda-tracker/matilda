@@ -12,7 +12,7 @@
           </svg>
         </li>
         <li class='flex items-center'>
-          <a href='#' class='text-gray-600 dark:text-gray-100'>Swap</a>
+          <a href='#' class='text-gray-600 dark:text-gray-100'>Staking</a>
         </li>
       </ol>
     </nav>

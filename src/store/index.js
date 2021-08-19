@@ -275,6 +275,34 @@ export default new Vuex.Store({
                 token.balance = parseFloat(ethers.utils.formatUnits(token.balance, token.decimals)).toFixed(3)
             })
 
+            await erc1155.data.map(async (token) => {
+
+                const hmy = new Harmony('https://api.s0.t.hmny.io', {
+                    chainType: ChainType.Harmony,
+                    chainId: ChainID.HmyMainnet,
+                })
+
+                const contract = hmy.contracts.createContract(artifact.abi, token.tokenAddress)
+
+                token.name = await contract.methods.name().call()
+                token.symbol = await contract.methods.symbol().call()
+                token.balance = parseFloat(ethers.utils.formatUnits(token.balance, token.decimals)).toFixed(3)
+            })
+
+            await erc721.data.map(async (token) => {
+
+                const hmy = new Harmony('https://api.s0.t.hmny.io', {
+                    chainType: ChainType.Harmony,
+                    chainId: ChainID.HmyMainnet,
+                })
+
+                const contract = hmy.contracts.createContract(artifact.abi, token.tokenAddress)
+
+                token.name = await contract.methods.name().call()
+                token.symbol = await contract.methods.symbol().call()
+                token.balance = parseFloat(ethers.utils.formatUnits(token.balance, token.decimals)).toFixed(3)
+            })
+
             context.commit('SET_HRC1155_TOKEN_LIST', erc1155.data)
             context.commit('SET_HRC721_TOKEN_LIST', erc721.data)
             context.commit('SET_HRC20_TOKEN_LIST', erc20.data)

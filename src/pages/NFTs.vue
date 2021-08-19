@@ -26,40 +26,24 @@
               :key="`${token.tokenAddress}${token.tokenID}`"
               v-for="token in HRC721TokenList"
               class="w-full bg-gray-100 dark:bg-gray-900 border  border-white dark:border-gray-900 rounded-lg justify-between items-center px-4 py-2 my-3">
-            <div v-if="token.tokenURI === ''" class="flex">
-              <div class="my-auto w-auto">
-                <img class="w-28 h-auto"
-                     :src="token.meta.image ? token.meta.image : 'https://via.placeholder.com/200x200'"
-                     alt="token.meta.name">
+            <a :href="`https://explorer.harmony.one/inventory/erc721/${token.tokenAddress}/${token.tokenID}`" target="_blank">
+              <div class="flex">
+                <div class="my-auto w-auto">
+                  <img class="w-28 h-auto"
+                       :src="token.meta.image ? token.meta.image : 'https://upload.wikimedia.org/wikipedia/commons/2/24/NFT_Icon.png'"
+                       alt="token.meta.name">
+                </div>
+                <div class="my-auto w-11/12 pl-8">
+                  <p class="font-semibold text-xl">
+                    {{ token.name }} ({{ token.symbol }})
+                  </p>
+                  <p class="break-all">
+                    Token address: {{ token.tokenAddress }} <br>
+                    Token id: {{ token.tokenID }}
+                  </p>
+                </div>
               </div>
-              <div class="my-auto w-11/12 pl-8">
-                <p class="font-semibold text-xl">
-                  Unknown NFT
-                </p>
-                <p>
-                  Token id: {{ token.tokenID }}
-                </p>
-              </div>
-            </div>
-            <div v-else class="flex">
-              <div class="my-auto w-auto">
-                <img class="w-28 h-auto"
-                     :src="token.meta.image ? token.meta.image : 'https://via.placeholder.com/200x200'"
-                     alt="token.meta.name">
-              </div>
-              <div class="my-auto w-11/12 pl-8">
-                <p class="font-semibold text-xl">
-                  {{ token.meta.name ? token.meta.name : token.tokenAddress }}
-                </p>
-                <p>
-                  <span :key="`meta-${key}`" v-for="(value, key) in token.meta">
-                     <span v-if="Array.isArray(value) === false && key !== 'image'">
-                       {{ key }}: {{ value }} <br>
-                     </span>
-                  </span>
-                </p>
-              </div>
-            </div>
+            </a>
           </div>
         </div>
       </div>
@@ -73,21 +57,24 @@
               :key="`${token.tokenAddress}${token.tokenID}`"
               v-for="token in HRC1155TokenList"
               class="w-full bg-gray-100 dark:bg-gray-900 border  border-white dark:border-gray-900 rounded-lg justify-between items-center px-4 py-2 my-3">
-            <div class="flex">
-              <div class="my-auto w-auto">
-                <img class="w-28 h-auto"
-                     src="https://via.placeholder.com/200x200"
-                     alt="token.meta.name">
+            <a :href="`https://explorer.harmony.one/inventory/erc1155/${token.tokenAddress}/${token.tokenID}`" target="_blank">
+              <div class="flex">
+                <div class="my-auto w-auto">
+                  <img class="w-28 h-auto"
+                       src="https://upload.wikimedia.org/wikipedia/commons/2/24/NFT_Icon.png"
+                       alt="token.meta.name">
+                </div>
+                <div class="my-auto w-11/12 pl-8">
+                  <p class="font-semibold text-xl">
+                    {{ token.name }} ({{ token.symbol }})
+                  </p>
+                  <p class="break-all">
+                    Token address: {{ token.tokenAddress }} <br>
+                    Token id: {{ token.tokenID }}
+                  </p>
+                </div>
               </div>
-              <div class="my-auto w-11/12 pl-8">
-                <p class="font-semibold text-xl">
-                  Unknown NFT
-                </p>
-                <p>
-                  Token id: {{ token.tokenID }}
-                </p>
-              </div>
-            </div>
+            </a>
           </div>
         </div>
       </div>
