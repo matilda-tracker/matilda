@@ -8,6 +8,7 @@ import Swap from './pages/Swap'
 import Staking from './pages/Staking'
 import Search from './pages/Search'
 import Validator from './pages/Validator'
+import Bridge from './pages/Bridge'
 
 Vue.config.productionTip = false
 
@@ -48,6 +49,11 @@ const router = new Router({
             path: '/staking',
             name: 'staking',
             component: Staking
+        },
+        {
+            path: '/bridge',
+            name: 'bridge',
+            component: Bridge
         },
         {
             path: '/search/:address',
