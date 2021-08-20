@@ -75,6 +75,18 @@
           </div>
         </router-link>
       </div>
+      <div
+          @click="toggleSidebar()"
+          class="w-full items-center text-blue-400 py-2 pl-4 hover:bg-gray-200 dark:hover:bg-gray-700 rounded-lg cursor-pointer">
+        <router-link :to="{name: 'bridge'}">
+          <div class="w-full">
+            <i class="fas fa-link mr-4 w-4"></i>
+            <span class="text-gray-700 dark:text-gray-100">
+              Bridge
+            </span>
+          </div>
+        </router-link>
+      </div>
       <div>
         <div
             @click="toggleSidebar()"
@@ -102,65 +114,21 @@
 
     <hr class="border-gray-200 dark:border-gray-700">
 
-    <div class="my-4 px-4">
-      <p class="hidden md:block pl-4 text-sm font-semibold mb-4">Harmony metrics</p>
-      <div class="mb-2">
-        <p class="pl-4 text-sm">
-          <strong>
-            ONE price
-          </strong>
-        </p>
-        <p class="pl-4 text-sm">
-          $ {{ parseFloat(harmonyMetrics.onePrice.weightedAvgPrice).toFixed(2) }}
-          ({{ parseFloat(harmonyMetrics.onePrice.priceChangePercent).toFixed(2) }}%)
-        </p>
-      </div>
-      <div class="hidden md:block mb-2">
-        <p class="pl-4 text-sm">
-          <strong>
-            14 Day tx volume
-          </strong>
-        </p>
-        <p class="pl-4 text-sm">{{ harmonyMetrics.fourteenDayTxVolume }}</p>
-      </div>
-      <div class="hidden md:block mb-2">
-        <p class="pl-4 text-sm">
-          <strong>
-            Shard count
-          </strong>
-        </p>
-        <p class="pl-4 text-sm">4</p>
-      </div>
-      <div class="mb-2">
-        <p class="pl-4 text-sm">
-          <strong>
-            Shard latency
-          </strong>
-        </p>
-        <p class="pl-4 text-sm">Shard 0: {{ harmonyMetrics.shard0Latency.toFixed(2) }}s</p>
-        <p class="pl-4 text-sm">Shard 1: {{ harmonyMetrics.shard1Latency.toFixed(2) }}s</p>
-        <p class="pl-4 text-sm">Shard 2: {{ harmonyMetrics.shard2Latency.toFixed(2) }}s</p>
-        <p class="pl-4 text-sm">Shard 3: {{ harmonyMetrics.shard3Latency.toFixed(2) }}s</p>
-        <p class="pl-4 text-sm mt-2">
-          <strong>
-            Average latency
-          </strong>
-        </p>
-        <p class="pl-4 text-sm">
-          {{ harmonyMetrics.averageLatency.toFixed(2) }}s
-        </p>
-      </div>
-    </div>
+    <harmony-metrics></harmony-metrics>
   </div>
 </template>
 
 <script>
 import {mapGetters, mapActions} from 'vuex'
+import HarmonyMetrics from './info/HarmonyMetrics'
 
 export default {
   name: 'Sidebar',
+  components: {
+    HarmonyMetrics
+  },
   computed: {
-    ...mapGetters(['walletUsed', 'sideBarOpen', 'harmonyMetrics'])
+    ...mapGetters(['walletUsed', 'sideBarOpen'])
   },
   methods: {
     ...mapActions(['toggleSidebar'])

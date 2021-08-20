@@ -223,7 +223,7 @@
         <button
             class="w-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-400 border border-white dark:border-gray-700 rounded-lg h-12 mt-8"
             type="button"
-            @click="delegateToValidator(amountToDelegate)">
+            @click="delegateValidator()">
           Delegate
         </button>
       </div>
@@ -255,7 +255,7 @@
         <button
             class="w-full bg-gray-200 dark:bg-gray-700 hover:bg-gray-300 dark:hover:bg-gray-400 border border-white dark:border-gray-700 rounded-lg h-12 mt-8"
             type="button"
-            @click="undelegateFromValidator(amountToUndelegate)">
+            @click="undelegateValidator()">
           Undelegate
         </button>
       </div>
@@ -267,11 +267,8 @@
 <script>
 import axios from 'axios'
 import {mapGetters} from 'vuex'
-import {ChainID, ChainType, Unit} from '@harmony-js/utils'
-import {HarmonyAddress} from '@harmony-js/crypto'
-import {StakingFactory} from '@harmony-js/staking'
-import {Harmony} from '@harmony-js/core'
-import BN from 'bn.js'
+import {processOneWalletMessage} from '../plugins/staking'
+import {ChainID} from '@harmony-js/utils'
 
 export default {
   name: 'Validator',
@@ -355,35 +352,43 @@ export default {
     this.validator = validator.data.result
   },
   methods: {
-    async delegateToValidator() {
-      const hmy = new Harmony('https://api.s0.t.hmny.io', {
-        chainType: ChainType.Harmony,
-        chainId: ChainID.HmyMainnet,
-      })
+    async delegateValidator() {
+      const tx = await processOneWalletMessage(
+          {
+            type: 'MsgDelegate',
+            delegatorAddress: this.walletAddress,
+            validatorAddress: this.validatorAddress,
+            amount: this.amountToDelegate,
+            fee: '100001',
+            gasPrice: '10'
+          },
+          {
+            chain_id: ChainID.HmyMainnet,
+            rpc_url: 'https://api.s0.t.hmny.io'
+          },
+          this.walletAddress
+      )
 
-      const stakingTxn = new StakingFactory(hmy.messenger)
-          .delegate({
-            delegatorAddress: new HarmonyAddress(this.walletAddress).checksum,
-            validatorAddress: new HarmonyAddress(this.validatorAddress).checksum,
-            amount: parseFloat(Unit.Szabo(this.amountToDelegate).toHex())
-          })
-          .setTxParams({
-            gasPrice: Unit.One('10').toHex(),
-            gasLimit: Unit.Wei(new BN('1000001').add(new BN('20000'))).toHex(),
-            chainId: ChainID.HmyMainnet
-          })
-          .build()
-
-      stakingTxn.setFromAddress(new HarmonyAddress(this.walletAddress).checksum)
-
-      const signedTxn = await this.wallet.wallet.signTransaction(stakingTxn)
-      const [sentTxn, txnHash] = await signedTxn.sendTransaction()
-
-      this.delegate.sentTxn = sentTxn
-      this.delegate.txnHash = txnHash
+      console.log(tx)
     },
-    async undelegateFromValidator() {
+    async undelegateValidator() {
+      const tx = await processOneWalletMessage(
+          {
+            type: 'MsgUndelegate',
+            delegatorAddress: this.walletAddress,
+            validatorAddress: this.validatorAddress,
+            amount: this.amountToUndelegate,
+            fee: '100001',
+            gasPrice: '10'
+          },
+          {
+            chain_id: ChainID.HmyMainnet,
+            rpc_url: 'https://api.s0.t.hmny.io'
+          },
+          this.walletAddress
+      )
 
+      console.log(tx)
     },
     parseBigNumberToWei(x) {
       if (Math.abs(x) < 1.0) {

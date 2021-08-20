@@ -18,25 +18,34 @@
     </nav>
     <!-- breadcrumb end -->
 
+    <exchange-block
+        network="mainnet"
+        :addressMetamask="walletAddress"
+        :addressOneWallet="walletAddress">
+    </exchange-block>
+
   </div>
 </template>
 
 <script>
+import {ExchangeBlock} from 'bridge-ui-sdk'
+import 'bridge-ui-sdk/dist/index.css'
+import {mapGetters} from 'vuex'
 
 export default {
-  name: 'Pools',
-  filters: {
-    formatNumber(nStr) {
-      nStr += ''
-      let x = nStr.split('.')
-      let x1 = x[0]
-      let x2 = x.length > 1 ? '.' + x[1] : ''
-      let rgx = /(\d+)(\d{3})/
-      while (rgx.test(x1)) {
-        x1 = x1.replace(rgx, '$1' + ',' + '$2')
-      }
-      return x1 + x2
-    }
+  name: 'Bridge',
+  computed: {
+    ...mapGetters([
+      'walletAddress'
+    ])
   },
+  components: {
+    ExchangeBlock
+  },
+  data() {
+    return {
+      instance: {}
+    }
+  }
 }
 </script>
