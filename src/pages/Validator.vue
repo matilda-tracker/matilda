@@ -365,12 +365,12 @@ export default {
           .delegate({
             delegatorAddress: new HarmonyAddress(this.walletAddress).checksum,
             validatorAddress: new HarmonyAddress(this.validatorAddress).checksum,
-            amount: Unit.Szabo(this.amountToDelegate).toHex()
+            amount: parseFloat(Unit.Szabo(this.amountToDelegate).toHex())
           })
           .setTxParams({
             gasPrice: Unit.One('10').toHex(),
             gasLimit: Unit.Wei(new BN('1000001').add(new BN('20000'))).toHex(),
-            chainId: hmy.chainId
+            chainId: ChainID.HmyMainnet
           })
           .build()
 
