@@ -56,6 +56,11 @@ const router = new Router({
             component: Bridge
         },
         {
+            path: '/bridge/:id',
+            name: 'bridge',
+            component: Bridge
+        },
+        {
             path: '/search/:address',
             name: 'search',
             component: Search
