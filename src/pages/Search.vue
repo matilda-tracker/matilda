@@ -107,7 +107,8 @@
               class="w-full bg-gray-100 dark:bg-gray-900 border border-white dark:border-gray-900 rounded-lg flex justify-between items-center px-4 py-2 my-3">
             <div>
               <p class="font-semibold">
-                {{ holder.ownerAddress | compressAddress }}
+                {{ holder.ownerAddress }}
+<!--                {{ holder.ownerAddress | compressAddress }}-->
               </p>
             </div>
             <span class="text-green-500 font-semibold">
