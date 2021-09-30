@@ -18,13 +18,19 @@
     </nav>
     <!-- breadcrumb end -->
 
+    <SwapAggregatorLayout />
+
   </div>
 </template>
 
 <script>
+import SwapAggregatorLayout from '../plugins/swapAggregator'
 
 export default {
-  name: 'Pools',
+  name: 'Swap',
+  components: {
+    SwapAggregatorLayout
+  },
   filters: {
     formatNumber(nStr) {
       nStr += ''

@@ -18,9 +18,9 @@
 
         <!-- search bar -->
         <div class="hidden md:block relative text-gray-600 dark:text-gray-100">
-          <input type="search" name="search" placeholder="Look up token by address..."
+          <input @change="$router.push(`/search/${search}`)" v-model="search" type="search" name="search" placeholder="Look up token by address..."
                  class="bg-white h-10 dark:text-black w-96 px-5 rounded-lg border text-sm focus:outline-none">
-          <button type="submit" class="absolute right-0 top-0 mt-3 mr-4">
+          <button @click="$router.push(`/search/${search}`)" type="submit" class="absolute right-0 top-0 mt-3 mr-4">
             <svg class="h-4 w-4 fill-current text-black" xmlns="http://www.w3.org/2000/svg"
                  xmlns:xlink="http://www.w3.org/1999/xlink" version="1.1" id="Capa_1" x="0px" y="0px"
                  viewBox="0 0 56.966 56.966" style="enable-background:new 0 0 56.966 56.966;" xml:space="preserve"
@@ -53,7 +53,8 @@ export default {
   },
   data() {
     return {
-      dropDownOpen: false
+      dropDownOpen: false,
+      search: ''
     }
   },
   methods: {
